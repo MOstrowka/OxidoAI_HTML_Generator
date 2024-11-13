@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Article Preview</title>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        // Loading the template and article
+        async function loadTemplateAndArticle() {
+            try {
+                // Fetch the template
+                const templateResponse = await fetch('szablon.html');
+                if (!templateResponse.ok) throw new Error('Error loading szablon.html');
+                let templateContent = await templateResponse.text();
+
+                // Fetch the article
+                const articleResponse = await fetch('output/artykul.html');
+                if (!articleResponse.ok) throw new Error('Error loading output/artykul.html');
+                const articleContent = await articleResponse.text();
+
+                // Insert the article into <main> in the template
+                templateContent = templateContent.replace('<main id="content"></main>', `<main id="content">${articleContent}</main>`);
+
+                // Add the template to the page
+                document.getElementById('container').innerHTML = templateContent;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Run after the page loads
+        window.onload = loadTemplateAndArticle;
+    </script>
+</body>
+</html>
