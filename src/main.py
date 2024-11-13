@@ -21,26 +21,9 @@ def load_article_content(file_path):
         return file.read()
 
 
-def generate_html_content(article_content):
-    """Send a request to OpenAI to obtain HTML and filter the response."""
-    prompt = generate_prompt(article_content)
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    # Extract clean HTML between the ``` tags
-    match = re.search(r"```html\n(.*?)```", response.choices[0].message.content, re.DOTALL)
-
-    if match:
-        html_content = match.group(1).strip()  # Retrieves only the HTML content between the tags
-        return html_content
-    else:
-        raise ValueError("Failed to extract HTML content from the response.")
-
-
 def generate_prompt(article_content):
-    """Przygotuj prompt do wygenerowania kodu HTML."""
+    """Prompt to generate HTML code."""
+
     prompt = f"""
     Przekształć poniższy artykuł w czysty kod HTML zgodny z wytycznymi.
 
@@ -60,9 +43,34 @@ def generate_prompt(article_content):
       z uwzględnieniem [detale tła, nastrój, styl wizualny]".
     - Pod każdym obrazkiem dodaj krótki, bardzo zwięzły opis rysunku w tagu <figcaption> po polsku.
     - Jeśli w artykule występuje przypis, umieść go na końcu pliku, oznacz jako <footer> w osobnej sekcji.
-    - Generuj tylko kod do wstawienia wewnątrz tagów <body>, bez dodatkowych tagów i sekcji.
+    - Generuj tylko kod do wstawienia wewnątrz tagów <body>, bez dodatkowych tagów i sekcji. 
+    - Pamiętaj o odpowiednim formatowaniu kodu.
     """
     return prompt
+
+
+def generate_html_content(article_content):
+    """Send a request to OpenAI to obtain HTML and filter the response."""
+    prompt = generate_prompt(article_content)
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    # Extract clean HTML between the ``` tags
+    match = re.search(r"```html\n(.*?)```", response.choices[0].message.content, re.DOTALL)
+
+    if match:
+        html_content = match.group(1).strip()  # Retrieves only the HTML content between the tags
+        return html_content
+    else:
+        raise ValueError("Failed to extract HTML content from the response.")
+
+
+def save_html_content(html_content, file_path):
+    """Save the generated HTML to a file."""
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(html_content)
 
 
 def main():
@@ -71,7 +79,10 @@ def main():
 
     # Generate HTML
     html_content = generate_html_content(article_content)
-    print(html_content)
+
+    # Save HTML to file
+    save_html_content(html_content, OUTPUT_FILE_PATH)
+    print(f"HTML has been saved to {os.path.abspath(OUTPUT_FILE_PATH)}")
 
 
 if __name__ == "__main__":
