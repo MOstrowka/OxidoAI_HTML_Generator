@@ -6,7 +6,7 @@ Aplikacja pobiera treść z pliku tekstowego, wysyła ją do modelu GPT-4o, któ
 
 1. Klonowanie repozytorium:
    ```bash
-   git clone <URL repozytorium>
+   git clone <OxidoAI>
    cd Oxido_AI_HTML_Generator
    ```
 
