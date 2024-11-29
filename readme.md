@@ -37,6 +37,6 @@ Wygenerowany plik HTML znajdziesz w folderze `output` jako `artykul.html`.
 
 Projekt zawiera również pliki `szablon.html` oraz `podglad.html`.
 
-- **szablon.html**: Zawieraj stylizację i strukturę, do której dołączana jest treść artykułu.
+- **szablon.html**: Zawiera stylizację i strukturę, do której dołączana jest treść artykułu.
   
 - **podglad.html**: Plik `podglad.html` ładuje `szablon.html` oraz `artykul.html`, wyświetlając całą treść artykułu zgodnie z ustaloną stylizacją. Używa JavaScript do dynamicznego osadzenia treści artykułu w szablonie.
